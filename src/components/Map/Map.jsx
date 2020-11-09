@@ -8,8 +8,10 @@ class GameBoard extends React.Component {
             entityStates: {
                 threat: 'X',
                 empty: ' ',
-                player: 'O'
-            }
+                player: 'O',
+                treasure: 'T'
+            },
+            health: 10
         }
         this.setObstacles = this.setObstacles.bind(this)
         this.setPlayerPosition = this.setPlayerPosition.bind(this)
@@ -47,7 +49,7 @@ class GameBoard extends React.Component {
             playerPosition
         }, () => {
             this.setPlayerPosition(playerPosition)
-            this.setObstacles(this.props.randomPositions)
+            this.setObstacles(this.props.threatPosition)
         })
     }
     setPlayerPosition(playerPosition) {
@@ -67,7 +69,7 @@ class GameBoard extends React.Component {
     setBoard(props) {
         let { playerPosition, prevPlayerPos } = props
         let newTotalObstacles = this.state.totalObstaclesLeft
-
+        let newHealth = this.state.health
         if (this.state.totalObstaclesLeft !== undefined && this.state.totalObstaclesLeft === 0) {
             alert("Game over. Total moves: " + this.props.totalMoves)
         } else {
@@ -76,6 +78,8 @@ class GameBoard extends React.Component {
             if (board[newPlayerPos.x][newPlayerPos.y]["state"] === this.state.entityStates.threat) {
                 --newTotalObstacles
                 console.log('Threat hit!');
+                --newHealth;
+                console.log(newHealth);
 
                 let prevPos = {
                     x: playerPosition.x,
@@ -85,8 +89,10 @@ class GameBoard extends React.Component {
                 playerPosition["y"] = 0;
                 this.setState({
                 playerPosition,
-                prevPlayerPos: prevPos
+                prevPlayerPos: prevPos,
+                health: newHealth
             })
+            
 
             } else{
             board[newPlayerPos.x][newPlayerPos.y]["state"] = this.state.entityStates.player
@@ -94,24 +100,25 @@ class GameBoard extends React.Component {
             this.setState({
                 board: board,
                 playerPosition,
-                totalObstaclesLeft: newTotalObstacles
+                totalObstaclesLeft: newTotalObstacles,
+                health: this.state.health
             }, () => {
                 this.setPlayerPosition(playerPosition)
             })
         }
         }
     }
-    setObstacles(randomPositions) {
+    setObstacles(threatPosition) {
         let {
             board,
             playerPosition
         } = this.state
         let totalObstaclesLeft = 0
-        for (let i = 0; i < randomPositions.length; i++) {
-            if (randomPositions[i].x !== playerPosition.x && randomPositions[i].y !== playerPosition.y) {
-                if (board[randomPositions[i].x][randomPositions[i].y]["state"] !== this.state.entityStates.threat) {
+        for (let i = 0; i < threatPosition.length; i++) {
+            if (threatPosition[i].x !== playerPosition.x && threatPosition[i].y !== playerPosition.y) {
+                if (board[threatPosition[i].x][threatPosition[i].y]["state"] !== this.state.entityStates.threat) {
                     ++totalObstaclesLeft
-                    board[randomPositions[i].x][randomPositions[i].y]["state"] = this.state.entityStates.threat
+                    board[threatPosition[i].x][threatPosition[i].y]["state"] = this.state.entityStates.threat
                 }
             }
         }
@@ -121,10 +128,9 @@ class GameBoard extends React.Component {
         })
     }
     render() {
-        let {
-            board
-        } = this.state
-        return ( <table>
+        let { board } = this.state
+        return ( 
+        <table>
             <tbody> {
                 board.map((item, index) => ( <tr key = {index} > {
                         item.map((innerItem, innerIndex) => ( <td key = {innerIndex}
@@ -145,9 +151,9 @@ class GameBoard extends React.Component {
                         ))
                     } </tr>
                 ))
-            } </tbody> </table >
-        )
-    }
+            } </tbody>
+        </table >
+    )}
 }
 
 export default GameBoard

@@ -2,15 +2,16 @@ import React from 'react';
 import Map from '../Map/Map'
 import _ from 'lodash'
 import KeyHandler from 'react-key-handler';
+import HealthBar from '../HealthBar/HealthBar'
 
 class PlayMaze extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             showGameBoard: false,
-            boardHeight: 10,
-            boardWidth: 10,
-            randomPositions: [],
+            boardHeight: 5,
+            boardWidth: 5,
+            threatPosition: [],
             playerPosition: {
                 x: 0,
                 y: 0
@@ -20,6 +21,7 @@ class PlayMaze extends React.Component {
                 y: 0
             },
             totalMoves: 0,
+            health: 10
         }
         this.generateThreats = this.generateThreats.bind(this)
         this.handleKeyUp = this.handleKeyUp.bind(this)
@@ -28,7 +30,6 @@ class PlayMaze extends React.Component {
         this.handleKeyLeft = this.handleKeyLeft.bind(this)
         this.countTotalMoves = this.countTotalMoves.bind(this)
         this.setPlayerPosition = this.setPlayerPosition.bind(this)
-        this.setPlayerZero = this.setPlayerZero.bind(this)
         this.startGame = this.startGame.bind(this)
     }
     componentWillMount() {
@@ -40,19 +41,6 @@ class PlayMaze extends React.Component {
         this.generateThreats()
     }
     setPlayerPosition() {
-
-        let playerPosition = {
-            x: 0,
-            y: 0
-        }
-        this.setState({
-            playerPosition,
-            showGameBoard: true
-        })
-    }
-
-    setPlayerZero() {
-
         let playerPosition = {
             x: 0,
             y: 0
@@ -64,7 +52,7 @@ class PlayMaze extends React.Component {
     }
 
     generateThreats() {
-        let { randomPositions } = this.state
+        let { threatPosition } = this.state
         let randomValues = []
         let { boardHeight, boardWidth } = this.state
         let smallest = 0
@@ -82,13 +70,13 @@ class PlayMaze extends React.Component {
                     x: randomValues[i],
                     y: randomValues[j]
                 }
-                if (!randomPositions.includes(newRandomPosition)) {
-                    randomPositions.push(newRandomPosition)
+                if (!threatPosition.includes(newRandomPosition)) {
+                    threatPosition.push(newRandomPosition)
                 }
             }
         }
         this.setState({
-            randomPositions
+            threatPosition
         })
     }
     countTotalMoves() {
@@ -96,6 +84,7 @@ class PlayMaze extends React.Component {
             totalMoves: ++this.state.totalMoves
         })
     }
+    
     handleKeyUp(e) {
         e.preventDefault()
         let {
@@ -186,7 +175,8 @@ class PlayMaze extends React.Component {
     }
 
     render() {
-        return ( <div>
+        return ( <>
+        <HealthBar health={this.state.health} />
             <KeyHandler keyValue = "ArrowUp"
             onKeyHandle = {
                 this.handleKeyUp
@@ -208,16 +198,17 @@ class PlayMaze extends React.Component {
             {
                 this.state.showGameBoard &&
                     ( < Map 
-                        randomPositions = { this.state.randomPositions }
+                        threatPosition = { this.state.threatPosition }
                         boardWidth = { this.state.boardWidth }
                         boardHeight = { this.state.boardHeight }
                         playerPosition = { this.state.playerPosition }
                         prevPlayerPos = { this.state.prevPlayerPos }
                         totalMoves = { this.state.totalMoves }
+                        health = { this.state.health }
                         />
                     )
             } 
-        </div>
+        </>
         )}
     }
 
