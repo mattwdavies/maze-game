@@ -8,8 +8,8 @@ class PlayMaze extends React.Component {
     super(props);
     this.state = {
       showGameBoard: false,
-      boardHeight: 5,
-      boardWidth: 5,
+      boardHeight: 10,
+      boardWidth: 10,
       threatPosition: [],
       treasurePosition: [],
       playerPosition: {

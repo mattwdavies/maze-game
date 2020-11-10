@@ -1,6 +1,11 @@
 import React from 'react';
 import HealthBar from '../HealthBar/HealthBar';
 import WealthBar from '../WealthBar/WealthBar';
+import GameIcon from '../Icons/GameIcon/GameIcon';
+import './Map.css';
+import player from '../../images/player.png';
+import threat from '../../images/threat.png';
+import treasure from '../../images/treasure.png';
 
 class GameBoard extends React.Component {
   constructor(props) {
@@ -8,10 +13,10 @@ class GameBoard extends React.Component {
     this.state = {
       board: [],
       entityStates: {
-        threat: 'X',
+        threat: <GameIcon icon={threat} alt="threat" />,
         empty: ' ',
-        player: 'O',
-        treasure: 'T',
+        player: <GameIcon icon={player} alt="player" />,
+        treasure: <GameIcon icon={treasure} alt="treasure" />,
       },
       health: 10,
       wealth: 0,
@@ -145,7 +150,7 @@ class GameBoard extends React.Component {
 
   setTreasure(treasurePosition, threatPosition) {
     let { board, playerPosition } = this.state;
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 8; i++) {
       if (
         treasurePosition[i].x !== playerPosition.x &&
         treasurePosition[i].y !== playerPosition.y &&
@@ -170,31 +175,33 @@ class GameBoard extends React.Component {
     let { board } = this.state;
     return (
       <>
+        <div className="cell-back"></div>
         <HealthBar health={this.state.health} />
         <WealthBar wealth={this.state.wealth} />
         <table cellSpacing="0" border="1px solid black">
           <tbody>
-            {' '}
             {board.map((item, index) => (
               <tr key={index}>
-                {' '}
                 {item.map((innerItem, innerIndex) => (
                   <td
+                    className="cell-back"
                     key={innerIndex}
                     style={{
-                      border: '1px solid black',
+                      padding: 0,
+                      border: '0px solid black',
                       margin: 0,
-                      width: 50,
-                      height: 50,
+                      width: 60,
+                      height: 60,
                       textAlign: 'center',
                       verticalAlign: 'middle',
+                      backgroundSize: 'cover',
                     }}
                   >
-                    <p>{innerItem.state}</p>
+                    {innerItem.state}
                   </td>
-                ))}{' '}
+                ))}
               </tr>
-            ))}{' '}
+            ))}
           </tbody>
         </table>
       </>
