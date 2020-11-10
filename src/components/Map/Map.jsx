@@ -6,6 +6,7 @@ import './Map.css';
 import player from '../../images/player.png';
 import threat from '../../images/threat.png';
 import treasure from '../../images/treasure.png';
+import { cellSize } from '../utility';
 
 class GameBoard extends React.Component {
   constructor(props) {
@@ -150,7 +151,7 @@ class GameBoard extends React.Component {
 
   setTreasure(treasurePosition, threatPosition) {
     let { board, playerPosition } = this.state;
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 5; i++) {
       if (
         treasurePosition[i].x !== playerPosition.x &&
         treasurePosition[i].y !== playerPosition.y &&
@@ -190,8 +191,8 @@ class GameBoard extends React.Component {
                       padding: 0,
                       border: '0px solid black',
                       margin: 0,
-                      width: 60,
-                      height: 60,
+                      width: cellSize,
+                      height: cellSize,
                       textAlign: 'center',
                       verticalAlign: 'middle',
                       backgroundSize: 'cover',

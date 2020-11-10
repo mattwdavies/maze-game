@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { cellSize } from '../../utility';
 
 class GameIcon extends Component {
   constructor(props) {
@@ -10,8 +11,8 @@ class GameIcon extends Component {
         <img
           src={this.props.icon}
           alt={this.props.alt}
-          height="55"
-          width="55"
+          height={cellSize - cellSize * 0.1}
+          width={cellSize - cellSize * 0.1}
         ></img>
       </div>
     );
