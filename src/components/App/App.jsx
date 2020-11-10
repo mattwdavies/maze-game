@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import PlayMaze from './components/PlayMaze/PlayMaze';
+import PlayMaze from '../PlayMaze/PlayMaze';
+
 class App extends Component {
   render() {
     return (

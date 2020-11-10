@@ -11,6 +11,7 @@ class PlayMaze extends React.Component {
       boardHeight: 5,
       boardWidth: 5,
       threatPosition: [],
+      treasurePosition: [],
       playerPosition: {
         x: 0,
         y: 0,
@@ -22,21 +23,24 @@ class PlayMaze extends React.Component {
       totalMoves: 0,
     };
     this.generateThreats = this.generateThreats.bind(this);
+    this.generateTreasure = this.generateTreasure.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleKeyRight = this.handleKeyRight.bind(this);
     this.handleKeyLeft = this.handleKeyLeft.bind(this);
+    this.handleSpaceBar = this.handleSpaceBar.bind(this);
     this.countTotalMoves = this.countTotalMoves.bind(this);
     this.setPlayerPosition = this.setPlayerPosition.bind(this);
     this.startGame = this.startGame.bind(this);
   }
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.startGame();
   }
 
   startGame() {
     this.setPlayerPosition();
     this.generateThreats();
+    this.generateTreasure();
   }
   setPlayerPosition() {
     let playerPosition = {
@@ -73,13 +77,47 @@ class PlayMaze extends React.Component {
         }
       }
     }
+    console.log(threatPosition);
     this.setState({
       threatPosition,
     });
   }
-  countTotalMoves() {
+
+  generateTreasure() {
+    let { treasurePosition } = this.state;
+    let randomValues = [];
+    let { boardHeight, boardWidth } = this.state;
+    let smallest = 0;
+    if (Number(boardHeight) < Number(boardWidth)) {
+      smallest = boardHeight;
+    } else {
+      smallest = boardWidth;
+    }
+    for (let i = 0; i < Math.ceil(smallest / 2); i++) {
+      randomValues.push(_.random(0, smallest - 1));
+    }
+    for (let i = 0; i < randomValues.length; i++) {
+      for (let j = 0; j < randomValues.length; j++) {
+        let newRandomPosition = {
+          x: randomValues[i],
+          y: randomValues[j],
+        };
+        if (!treasurePosition.includes(newRandomPosition)) {
+          treasurePosition.push(newRandomPosition);
+        }
+      }
+    }
+    console.log(treasurePosition);
     this.setState({
-      totalMoves: ++this.state.totalMoves,
+      treasurePosition,
+    });
+  }
+
+  countTotalMoves() {
+    let newMoves = this.state.totalMoves;
+    ++newMoves;
+    this.setState({
+      totalMoves: newMoves,
     });
   }
 
@@ -161,6 +199,9 @@ class PlayMaze extends React.Component {
       this.countTotalMoves();
     }
   }
+  handleSpaceBar() {
+    console.log('asdasdasas');
+  }
 
   render() {
     return (
@@ -168,10 +209,12 @@ class PlayMaze extends React.Component {
         <KeyHandler keyValue="ArrowUp" onKeyHandle={this.handleKeyUp} />{' '}
         <KeyHandler keyValue="ArrowDown" onKeyHandle={this.handleKeyDown} />{' '}
         <KeyHandler keyValue="ArrowRight" onKeyHandle={this.handleKeyRight} />{' '}
-        <KeyHandler keyValue="ArrowLeft" onKeyHandle={this.handleKeyLeft} />
+        <KeyHandler keyValue="ArrowLeft" onKeyHandle={this.handleKeyLeft} />{' '}
+        <KeyHandler keyValue="SpaceBar" onKeyHandle={this.handleSpaceBar} />
         {this.state.showGameBoard && (
           <Map
             threatPosition={this.state.threatPosition}
+            treasurePosition={this.state.treasurePosition}
             boardWidth={this.state.boardWidth}
             boardHeight={this.state.boardHeight}
             playerPosition={this.state.playerPosition}

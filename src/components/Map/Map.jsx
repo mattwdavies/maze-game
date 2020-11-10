@@ -1,5 +1,6 @@
 import React from 'react';
 import HealthBar from '../HealthBar/HealthBar';
+import WealthBar from '../WealthBar/WealthBar';
 
 class GameBoard extends React.Component {
   constructor(props) {
@@ -13,12 +14,14 @@ class GameBoard extends React.Component {
         treasure: 'T',
       },
       health: 10,
+      wealth: 0,
     };
-    this.setObstacles = this.setObstacles.bind(this);
+    this.setThreats = this.setThreats.bind(this);
+    this.setTreasure = this.setTreasure.bind(this);
     this.setPlayerPosition = this.setPlayerPosition.bind(this);
     this.setBoard = this.setBoard.bind(this);
   }
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     let { boardHeight, boardWidth, playerPosition } = this.props;
     let board = [];
 
@@ -48,7 +51,11 @@ class GameBoard extends React.Component {
       },
       () => {
         this.setPlayerPosition(playerPosition);
-        this.setObstacles(this.props.threatPosition);
+        this.setThreats(this.props.threatPosition);
+        this.setTreasure(
+          this.props.treasurePosition,
+          this.props.threatPosition
+        );
       }
     );
   }
@@ -62,7 +69,7 @@ class GameBoard extends React.Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps === this.props) {
     } else {
       this.setBoard(nextProps);
@@ -85,6 +92,23 @@ class GameBoard extends React.Component {
       this.setState({
         health: newHealth,
       });
+    }
+    if (
+      board[newPlayerPos.x][newPlayerPos.y]['state'] ===
+      this.state.entityStates.treasure
+    ) {
+      let newWealth = this.state.wealth;
+      console.log('+1 Wealth');
+      ++newWealth;
+      board[newPlayerPos.x][newPlayerPos.y][
+        'state'
+      ] = this.state.entityStates.player;
+      board[prevPlayerPos.x][prevPlayerPos.y][
+        'state'
+      ] = this.state.entityStates.empty;
+      this.setState({
+        wealth: newWealth,
+      });
     } else {
       board[newPlayerPos.x][newPlayerPos.y][
         'state'
@@ -94,7 +118,7 @@ class GameBoard extends React.Component {
       ] = this.state.entityStates.empty;
     }
   }
-  setObstacles(threatPosition) {
+  setThreats(threatPosition) {
     let { board, playerPosition } = this.state;
     let totalObstaclesLeft = 0;
     for (let i = 0; i < threatPosition.length; i++) {
@@ -118,11 +142,36 @@ class GameBoard extends React.Component {
       totalObstaclesLeft,
     });
   }
+
+  setTreasure(treasurePosition, threatPosition) {
+    let { board, playerPosition } = this.state;
+    for (let i = 0; i < 5; i++) {
+      if (
+        treasurePosition[i].x !== playerPosition.x &&
+        treasurePosition[i].y !== playerPosition.y &&
+        treasurePosition[i].x !== threatPosition.x &&
+        treasurePosition[i].y !== threatPosition.y
+      ) {
+        if (
+          board[treasurePosition[i].x][treasurePosition[i].y]['state'] !==
+          this.state.entityStates.treasure
+        ) {
+          board[treasurePosition[i].x][treasurePosition[i].y][
+            'state'
+          ] = this.state.entityStates.treasure;
+        }
+      }
+    }
+    this.setState({
+      board,
+    });
+  }
   render() {
     let { board } = this.state;
     return (
       <>
         <HealthBar health={this.state.health} />
+        <WealthBar wealth={this.state.wealth} />
         <table cellSpacing="0" border="1px solid black">
           <tbody>
             {' '}
