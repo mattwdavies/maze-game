@@ -12,6 +12,7 @@ class PlayMaze extends React.Component {
       boardWidth: 10,
       threatPosition: [],
       treasurePosition: [],
+      wallPosition: [],
       playerPosition: {
         x: 0,
         y: 0,
@@ -24,12 +25,12 @@ class PlayMaze extends React.Component {
     };
     this.generateThreats = this.generateThreats.bind(this);
     this.generateTreasure = this.generateTreasure.bind(this);
+    this.generateWalls = this.generateWalls.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleKeyRight = this.handleKeyRight.bind(this);
     this.handleKeyLeft = this.handleKeyLeft.bind(this);
     this.handleSpaceBar = this.handleSpaceBar.bind(this);
-    this.countTotalMoves = this.countTotalMoves.bind(this);
     this.setPlayerPosition = this.setPlayerPosition.bind(this);
     this.startGame = this.startGame.bind(this);
   }
@@ -41,6 +42,7 @@ class PlayMaze extends React.Component {
     this.setPlayerPosition();
     this.generateThreats();
     this.generateTreasure();
+    this.generateWalls();
   }
   setPlayerPosition() {
     let playerPosition = {
@@ -54,6 +56,7 @@ class PlayMaze extends React.Component {
   }
 
   generateThreats() {
+    //hardcode these values with json data instead of randomising
     let { threatPosition } = this.state;
     let randomValues = [];
     let { boardHeight, boardWidth } = this.state;
@@ -84,6 +87,7 @@ class PlayMaze extends React.Component {
   }
 
   generateTreasure() {
+    //hardcode these values with json data instead of randomising
     let { treasurePosition } = this.state;
     let randomValues = [];
     let { boardHeight, boardWidth } = this.state;
@@ -113,11 +117,33 @@ class PlayMaze extends React.Component {
     });
   }
 
-  countTotalMoves() {
-    let newMoves = this.state.totalMoves;
-    ++newMoves;
+  generateWalls() {
+    //hardcode these values with json data instead of randomising
+    let { wallPosition } = this.state;
+    let randomValues = [];
+    let { boardHeight, boardWidth } = this.state;
+    let smallest = 0;
+    if (Number(boardHeight) < Number(boardWidth)) {
+      smallest = boardHeight;
+    } else {
+      smallest = boardWidth;
+    }
+    for (let i = 0; i < Math.ceil(smallest / 2); i++) {
+      randomValues.push(_.random(0, smallest - 1));
+    }
+    for (let i = 0; i < randomValues.length; i++) {
+      for (let j = 0; j < randomValues.length; j++) {
+        let newRandomPosition = {
+          x: randomValues[i],
+          y: randomValues[j],
+        };
+        if (!wallPosition.includes(newRandomPosition)) {
+          wallPosition.push(newRandomPosition);
+        }
+      }
+    }
     this.setState({
-      totalMoves: newMoves,
+      wallPosition,
     });
   }
 
@@ -137,7 +163,6 @@ class PlayMaze extends React.Component {
         playerPosition,
         prevPlayerPos: prevPos,
       });
-      this.countTotalMoves();
     }
   }
   handleKeyDown(e) {
@@ -157,7 +182,6 @@ class PlayMaze extends React.Component {
         playerPosition,
         prevPlayerPos: prevPos,
       });
-      this.countTotalMoves();
     }
   }
   handleKeyRight(e) {
@@ -177,7 +201,6 @@ class PlayMaze extends React.Component {
         playerPosition,
         prevPlayerPos: prevPos,
       });
-      this.countTotalMoves();
     }
   }
   handleKeyLeft(e) {
@@ -196,7 +219,6 @@ class PlayMaze extends React.Component {
         playerPosition,
         prevPlayerPos: prevPos,
       });
-      this.countTotalMoves();
     }
   }
   handleSpaceBar() {
@@ -215,6 +237,7 @@ class PlayMaze extends React.Component {
           <Map
             threatPosition={this.state.threatPosition}
             treasurePosition={this.state.treasurePosition}
+            wallPosition={this.state.wallPosition}
             boardWidth={this.state.boardWidth}
             boardHeight={this.state.boardHeight}
             playerPosition={this.state.playerPosition}

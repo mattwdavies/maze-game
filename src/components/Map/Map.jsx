@@ -6,6 +6,7 @@ import './Map.css';
 import player from '../../images/player.png';
 import threat from '../../images/threat.png';
 import treasure from '../../images/treasure.png';
+import wall from '../../images/wall.png';
 import { cellSize } from '../utility';
 
 class GameBoard extends React.Component {
@@ -18,12 +19,14 @@ class GameBoard extends React.Component {
         empty: ' ',
         player: <GameIcon icon={player} alt="player" />,
         treasure: <GameIcon icon={treasure} alt="treasure" />,
+        wall: <GameIcon icon={wall} alt="wall" />,
       },
       health: 10,
       wealth: 0,
     };
     this.setThreats = this.setThreats.bind(this);
     this.setTreasure = this.setTreasure.bind(this);
+    this.setWalls = this.setWalls.bind(this);
     this.setPlayerPosition = this.setPlayerPosition.bind(this);
     this.setBoard = this.setBoard.bind(this);
   }
@@ -61,6 +64,11 @@ class GameBoard extends React.Component {
         this.setTreasure(
           this.props.treasurePosition,
           this.props.threatPosition
+        );
+        this.setWalls(
+          this.props.treasurePosition,
+          this.props.threatPosition,
+          this.props.wallPosition
         );
       }
     );
@@ -165,6 +173,33 @@ class GameBoard extends React.Component {
           board[treasurePosition[i].x][treasurePosition[i].y][
             'state'
           ] = this.state.entityStates.treasure;
+        }
+      }
+    }
+    this.setState({
+      board,
+    });
+  }
+
+  setWalls(treasurePosition, threatPosition, wallPosition) {
+    let { board, playerPosition } = this.state;
+    for (let i = 0; i < 10; i++) {
+      //what is this loop doing? why 10?
+      if (
+        wallPosition[i].x !== playerPosition.x &&
+        wallPosition[i].y !== playerPosition.y &&
+        wallPosition[i].x !== threatPosition.x &&
+        wallPosition[i].y !== threatPosition.y &&
+        wallPosition[i].x !== treasurePosition.x &&
+        wallPosition[i].y !== treasurePosition.y
+      ) {
+        if (
+          board[wallPosition[i].x][wallPosition[i].y]['state'] !==
+          this.state.entityStates.player
+        ) {
+          board[wallPosition[i].x][wallPosition[i].y][
+            'state'
+          ] = this.state.entityStates.wall;
         }
       }
     }
