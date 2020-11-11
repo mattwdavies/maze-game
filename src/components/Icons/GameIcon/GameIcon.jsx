@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { cellSize } from '../../../config/level2';
+import { cellSize } from '../../../config/level1';
 
 class GameIcon extends Component {
   constructor(props) {

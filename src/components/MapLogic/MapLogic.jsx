@@ -7,8 +7,8 @@ import wallMapPosition, {
   mapHeight,
   mapWidth,
   stairsDownPosition,
-} from '../../config/level2';
-
+} from '../../config/level1';
+//always update config in MapLogic, Map, WallIcon and GameIcon
 class MapLogic extends React.Component {
   constructor(props) {
     super(props);

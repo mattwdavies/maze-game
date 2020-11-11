@@ -14,7 +14,7 @@ import wallMapPosition, {
   treasureMapPosition,
   cellSize,
   stairsDownPosition,
-} from '../../config/level2';
+} from '../../config/level1';
 
 class GameLogic extends React.Component {
   constructor(props) {
