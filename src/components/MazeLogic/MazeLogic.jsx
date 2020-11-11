@@ -3,6 +3,7 @@ import Map from '../Map/Map';
 import _ from 'lodash';
 import KeyHandler from 'react-key-handler';
 import { mapHeightWidth } from '../utility';
+import wallMapPosition from './wallMapPosition';
 
 class PlayMaze extends React.Component {
   constructor(props) {
@@ -11,9 +12,9 @@ class PlayMaze extends React.Component {
       showGameBoard: false,
       boardHeight: mapHeightWidth,
       boardWidth: mapHeightWidth,
+      wallPosition: [],
       threatPosition: [],
       treasurePosition: [],
-      wallPosition: [],
       playerPosition: {
         x: 0,
         y: 0,
@@ -23,9 +24,9 @@ class PlayMaze extends React.Component {
         y: 0,
       },
     };
+    this.generateWalls = this.generateWalls.bind(this);
     this.generateThreats = this.generateThreats.bind(this);
     this.generateTreasure = this.generateTreasure.bind(this);
-    this.generateWalls = this.generateWalls.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleKeyRight = this.handleKeyRight.bind(this);
@@ -51,6 +52,15 @@ class PlayMaze extends React.Component {
     this.setState({
       playerPosition,
       showGameBoard: true,
+    });
+  }
+  generateWalls() {
+    //hardcode these values with json data instead of randomising
+    let { wallPosition } = this.state;
+
+    wallPosition = wallMapPosition;
+    this.setState({
+      wallPosition,
     });
   }
 
@@ -109,39 +119,8 @@ class PlayMaze extends React.Component {
         }
       }
     }
-    console.log(treasurePosition);
     this.setState({
       treasurePosition,
-    });
-  }
-
-  generateWalls() {
-    //hardcode these values with json data instead of randomising
-    let { wallPosition } = this.state;
-    let randomValues = [];
-    let { boardHeight, boardWidth } = this.state;
-    let smallest = 0;
-    if (Number(boardHeight) < Number(boardWidth)) {
-      smallest = boardHeight;
-    } else {
-      smallest = boardWidth;
-    }
-    for (let i = 0; i < Math.ceil(smallest / 2); i++) {
-      randomValues.push(_.random(0, smallest - 1));
-    }
-    for (let i = 0; i < randomValues.length; i++) {
-      for (let j = 0; j < randomValues.length; j++) {
-        let newRandomPosition = {
-          x: randomValues[i],
-          y: randomValues[j],
-        };
-        if (!wallPosition.includes(newRandomPosition)) {
-          wallPosition.push(newRandomPosition);
-        }
-      }
-    }
-    this.setState({
-      wallPosition,
     });
   }
 

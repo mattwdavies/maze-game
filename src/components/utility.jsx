@@ -1,2 +1,2 @@
 export const cellSize = 60;
-export const mapHeightWidth = 8;
+export const mapHeightWidth = 10;

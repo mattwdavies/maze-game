@@ -147,20 +147,15 @@ class GameBoard extends React.Component {
     }
   }
   setThreats(threatPosition) {
-    let { board, playerPosition } = this.state;
+    let { board } = this.state;
     for (let i = 0; i < mapHeightWidth; i++) {
       if (
-        threatPosition[i].x !== playerPosition.x &&
-        threatPosition[i].y !== playerPosition.y
+        board[threatPosition[i].x][threatPosition[i].y]['state'] !==
+        this.state.entityStates.threat
       ) {
-        if (
-          board[threatPosition[i].x][threatPosition[i].y]['state'] !==
-          this.state.entityStates.threat
-        ) {
-          board[threatPosition[i].x][threatPosition[i].y][
-            'state'
-          ] = this.state.entityStates.threat;
-        }
+        board[threatPosition[i].x][threatPosition[i].y][
+          'state'
+        ] = this.state.entityStates.threat;
       }
     }
     this.setState({
@@ -213,6 +208,7 @@ class GameBoard extends React.Component {
         }
       }
     }
+    console.log(board);
     this.setState({
       board,
     });
