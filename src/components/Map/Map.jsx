@@ -2,14 +2,21 @@ import React from 'react';
 import HealthBar from '../HealthBar/HealthBar';
 import WealthBar from '../WealthBar/WealthBar';
 import GameIcon from '../Icons/GameIcon/GameIcon';
+import WallIcon from '../Icons/GameIcon/WallIcon';
 import './Map.css';
 import player from '../../images/player.png';
 import threat from '../../images/threat.png';
 import treasure from '../../images/treasure.png';
 import wall from '../../images/wall.png';
-import { cellSize, mapHeightWidth } from '../utility';
+import stairs from '../../images/stairs-down.png';
+import wallMapPosition, {
+  threatMapPosition,
+  treasureMapPosition,
+  cellSize,
+  stairsDownPosition,
+} from '../../config/level2';
 
-class GameBoard extends React.Component {
+class GameLogic extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -19,7 +26,8 @@ class GameBoard extends React.Component {
         empty: ' ',
         player: <GameIcon icon={player} alt="player" />,
         treasure: <GameIcon icon={treasure} alt="treasure" />,
-        wall: <GameIcon icon={wall} alt="wall" />,
+        wall: <WallIcon icon={wall} alt="wall" />,
+        stairs: <GameIcon icon={stairs} alt="stairs" />,
       },
       health: 10,
       wealth: 0,
@@ -29,15 +37,16 @@ class GameBoard extends React.Component {
     this.setWalls = this.setWalls.bind(this);
     this.setPlayerPosition = this.setPlayerPosition.bind(this);
     this.setBoard = this.setBoard.bind(this);
+    this.setStairs = this.setStairs.bind(this);
   }
   UNSAFE_componentWillMount() {
-    let { boardHeight, boardWidth, playerPosition } = this.props;
+    let { mapHeight, mapWidth, playerPosition } = this.props;
     let board = [];
 
-    for (let i = 0; i < boardHeight; i++) {
+    for (let i = 0; i < mapHeight; i++) {
       let innerArray = []; //dont use ambiguous names
 
-      for (let j = 0; j < boardWidth; j++) {
+      for (let j = 0; j < mapWidth; j++) {
         let obj = {};
         obj['x'] = i;
         obj['y'] = j;
@@ -61,15 +70,9 @@ class GameBoard extends React.Component {
       () => {
         this.setPlayerPosition(playerPosition);
         this.setThreats(this.props.threatPosition);
-        this.setTreasure(
-          this.props.treasurePosition,
-          this.props.threatPosition
-        );
-        this.setWalls(
-          this.props.treasurePosition,
-          this.props.threatPosition,
-          this.props.wallPosition
-        );
+        this.setTreasure(this.props.treasurePosition);
+        this.setWalls(this.props.wallPosition);
+        this.setStairs(this.props.stairsPosition);
       }
     );
   }
@@ -148,67 +151,47 @@ class GameBoard extends React.Component {
   }
   setThreats(threatPosition) {
     let { board } = this.state;
-    for (let i = 0; i < mapHeightWidth; i++) {
-      if (
-        board[threatPosition[i].x][threatPosition[i].y]['state'] !==
-        this.state.entityStates.threat
-      ) {
-        board[threatPosition[i].x][threatPosition[i].y][
-          'state'
-        ] = this.state.entityStates.threat;
-      }
+    for (let i = 0; i < threatMapPosition.length; i++) {
+      board[threatPosition[i].y][threatPosition[i].x][
+        'state'
+      ] = this.state.entityStates.threat;
     }
     this.setState({
       board,
     });
   }
 
-  setTreasure(treasurePosition, threatPosition) {
-    let { board, playerPosition } = this.state;
-    for (let i = 0; i < mapHeightWidth; i++) {
-      if (
-        treasurePosition[i].x !== playerPosition.x &&
-        treasurePosition[i].y !== playerPosition.y &&
-        treasurePosition[i].x !== threatPosition.x &&
-        treasurePosition[i].y !== threatPosition.y
-      ) {
-        if (
-          board[treasurePosition[i].x][treasurePosition[i].y]['state'] !==
-          this.state.entityStates.treasure
-        ) {
-          board[treasurePosition[i].x][treasurePosition[i].y][
-            'state'
-          ] = this.state.entityStates.treasure;
-        }
-      }
+  setTreasure(treasurePosition) {
+    let { board } = this.state;
+    for (let i = 0; i < treasureMapPosition.length; i++) {
+      board[treasurePosition[i].y][treasurePosition[i].x][
+        'state'
+      ] = this.state.entityStates.treasure;
     }
     this.setState({
       board,
     });
   }
 
-  setWalls(treasurePosition, threatPosition, wallPosition) {
-    let { board, playerPosition } = this.state;
-    for (let i = 0; i < mapHeightWidth; i++) {
-      if (
-        wallPosition[i].x !== playerPosition.x &&
-        wallPosition[i].y !== playerPosition.y &&
-        wallPosition[i].x !== threatPosition.x &&
-        wallPosition[i].y !== threatPosition.y &&
-        wallPosition[i].x !== treasurePosition.x &&
-        wallPosition[i].y !== treasurePosition.y
-      ) {
-        if (
-          board[wallPosition[i].x][wallPosition[i].y]['state'] !==
-          this.state.entityStates.wall
-        ) {
-          board[wallPosition[i].x][wallPosition[i].y][
-            'state'
-          ] = this.state.entityStates.wall;
-        }
-      }
+  setWalls(wallPosition) {
+    let { board } = this.state;
+    for (let i = 0; i < wallMapPosition.length; i++) {
+      board[wallPosition[i].y][wallPosition[i].x][
+        'state'
+      ] = this.state.entityStates.wall;
     }
-    console.log(board);
+    this.setState({
+      board,
+    });
+  }
+
+  setStairs(stairsPosition) {
+    let { board } = this.state;
+    for (let i = 0; i < stairsDownPosition.length; i++) {
+      board[stairsPosition[i].y][stairsPosition[i].x][
+        'state'
+      ] = this.state.entityStates.stairs;
+    }
     this.setState({
       board,
     });
@@ -219,7 +202,7 @@ class GameBoard extends React.Component {
       <>
         <HealthBar health={this.state.health} />
         <WealthBar wealth={this.state.wealth} />
-        <table cellSpacing="3" border="1px solid black">
+        <table cellSpacing="0" border="3px solid black">
           <tbody>
             {board.map((item, index) => (
               <tr key={index}>
@@ -229,12 +212,10 @@ class GameBoard extends React.Component {
                     key={innerIndex}
                     style={{
                       padding: 0,
-                      border: '0px solid black',
+                      border: '0px',
                       margin: 0,
                       width: cellSize,
                       height: cellSize,
-                      textAlign: 'center',
-                      verticalAlign: 'middle',
                       backgroundSize: 'cover',
                     }}
                   >
@@ -250,4 +231,4 @@ class GameBoard extends React.Component {
   }
 }
 
-export default GameBoard;
+export default GameLogic;
