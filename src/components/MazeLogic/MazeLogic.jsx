@@ -2,14 +2,15 @@ import React from 'react';
 import Map from '../Map/Map';
 import _ from 'lodash';
 import KeyHandler from 'react-key-handler';
+import { mapHeightWidth } from '../utility';
 
 class PlayMaze extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       showGameBoard: false,
-      boardHeight: 10,
-      boardWidth: 10,
+      boardHeight: mapHeightWidth,
+      boardWidth: mapHeightWidth,
       threatPosition: [],
       treasurePosition: [],
       wallPosition: [],
@@ -21,7 +22,6 @@ class PlayMaze extends React.Component {
         x: 0,
         y: 0,
       },
-      totalMoves: 0,
     };
     this.generateThreats = this.generateThreats.bind(this);
     this.generateTreasure = this.generateTreasure.bind(this);
@@ -30,7 +30,6 @@ class PlayMaze extends React.Component {
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleKeyRight = this.handleKeyRight.bind(this);
     this.handleKeyLeft = this.handleKeyLeft.bind(this);
-    this.handleSpaceBar = this.handleSpaceBar.bind(this);
     this.setPlayerPosition = this.setPlayerPosition.bind(this);
     this.startGame = this.startGame.bind(this);
   }
@@ -58,7 +57,7 @@ class PlayMaze extends React.Component {
   generateThreats() {
     //hardcode these values with json data instead of randomising
     let { threatPosition } = this.state;
-    let randomValues = [];
+    let randomValues = []; //make not random array from json
     let { boardHeight, boardWidth } = this.state;
     let smallest = 0;
     if (Number(boardHeight) < Number(boardWidth)) {
@@ -80,7 +79,6 @@ class PlayMaze extends React.Component {
         }
       }
     }
-    console.log(threatPosition);
     this.setState({
       threatPosition,
     });
@@ -221,9 +219,6 @@ class PlayMaze extends React.Component {
       });
     }
   }
-  handleSpaceBar() {
-    console.log('asdasdasas');
-  }
 
   render() {
     return (
@@ -232,7 +227,6 @@ class PlayMaze extends React.Component {
         <KeyHandler keyValue="ArrowDown" onKeyHandle={this.handleKeyDown} />{' '}
         <KeyHandler keyValue="ArrowRight" onKeyHandle={this.handleKeyRight} />{' '}
         <KeyHandler keyValue="ArrowLeft" onKeyHandle={this.handleKeyLeft} />{' '}
-        <KeyHandler keyValue="SpaceBar" onKeyHandle={this.handleSpaceBar} />
         {this.state.showGameBoard && (
           <Map
             threatPosition={this.state.threatPosition}
@@ -242,7 +236,6 @@ class PlayMaze extends React.Component {
             boardHeight={this.state.boardHeight}
             playerPosition={this.state.playerPosition}
             prevPlayerPos={this.state.prevPlayerPos}
-            totalMoves={this.state.totalMoves}
             health={this.state.health}
           />
         )}

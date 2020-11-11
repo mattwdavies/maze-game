@@ -7,7 +7,7 @@ import player from '../../images/player.png';
 import threat from '../../images/threat.png';
 import treasure from '../../images/treasure.png';
 import wall from '../../images/wall.png';
-import { cellSize } from '../utility';
+import { cellSize, mapHeightWidth } from '../utility';
 
 class GameBoard extends React.Component {
   constructor(props) {
@@ -35,7 +35,7 @@ class GameBoard extends React.Component {
     let board = [];
 
     for (let i = 0; i < boardHeight; i++) {
-      let innerArray = [];
+      let innerArray = []; //dont use ambiguous names
 
       for (let j = 0; j < boardWidth; j++) {
         let obj = {};
@@ -109,6 +109,16 @@ class GameBoard extends React.Component {
     }
     if (
       board[newPlayerPos.x][newPlayerPos.y]['state'] ===
+      this.state.entityStates.wall
+    ) {
+      console.log('Wall');
+      playerPosition['x'] = prevPlayerPos['x'];
+      playerPosition['y'] = prevPlayerPos['y'];
+
+      this.setState({});
+    }
+    if (
+      board[newPlayerPos.x][newPlayerPos.y]['state'] ===
       this.state.entityStates.treasure
     ) {
       let newWealth = this.state.wealth;
@@ -123,7 +133,11 @@ class GameBoard extends React.Component {
       this.setState({
         wealth: newWealth,
       });
-    } else {
+    }
+    if (
+      board[newPlayerPos.x][newPlayerPos.y]['state'] ===
+      this.state.entityStates.empty
+    ) {
       board[newPlayerPos.x][newPlayerPos.y][
         'state'
       ] = this.state.entityStates.player;
@@ -134,8 +148,7 @@ class GameBoard extends React.Component {
   }
   setThreats(threatPosition) {
     let { board, playerPosition } = this.state;
-    let totalObstaclesLeft = 0;
-    for (let i = 0; i < threatPosition.length; i++) {
+    for (let i = 0; i < mapHeightWidth; i++) {
       if (
         threatPosition[i].x !== playerPosition.x &&
         threatPosition[i].y !== playerPosition.y
@@ -144,7 +157,6 @@ class GameBoard extends React.Component {
           board[threatPosition[i].x][threatPosition[i].y]['state'] !==
           this.state.entityStates.threat
         ) {
-          ++totalObstaclesLeft;
           board[threatPosition[i].x][threatPosition[i].y][
             'state'
           ] = this.state.entityStates.threat;
@@ -153,13 +165,12 @@ class GameBoard extends React.Component {
     }
     this.setState({
       board,
-      totalObstaclesLeft,
     });
   }
 
   setTreasure(treasurePosition, threatPosition) {
     let { board, playerPosition } = this.state;
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < mapHeightWidth; i++) {
       if (
         treasurePosition[i].x !== playerPosition.x &&
         treasurePosition[i].y !== playerPosition.y &&
@@ -183,8 +194,7 @@ class GameBoard extends React.Component {
 
   setWalls(treasurePosition, threatPosition, wallPosition) {
     let { board, playerPosition } = this.state;
-    for (let i = 0; i < 10; i++) {
-      //what is this loop doing? why 10?
+    for (let i = 0; i < mapHeightWidth; i++) {
       if (
         wallPosition[i].x !== playerPosition.x &&
         wallPosition[i].y !== playerPosition.y &&
@@ -195,7 +205,7 @@ class GameBoard extends React.Component {
       ) {
         if (
           board[wallPosition[i].x][wallPosition[i].y]['state'] !==
-          this.state.entityStates.player
+          this.state.entityStates.wall
         ) {
           board[wallPosition[i].x][wallPosition[i].y][
             'state'
@@ -211,10 +221,9 @@ class GameBoard extends React.Component {
     let { board } = this.state;
     return (
       <>
-        <div className="cell-back"></div>
         <HealthBar health={this.state.health} />
         <WealthBar wealth={this.state.wealth} />
-        <table cellSpacing="0" border="1px solid black">
+        <table cellSpacing="3" border="1px solid black">
           <tbody>
             {board.map((item, index) => (
               <tr key={index}>
