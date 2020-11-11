@@ -1,4 +1,4 @@
-const wallMapPosition = [
+const wallMapPosition1 = [
   { x: 1, y: 1 },
   { x: 2, y: 1 },
   { x: 3, y: 1 },
@@ -44,26 +44,26 @@ const wallMapPosition = [
   { x: 8, y: 9 },
 ];
 
-const threatMapPosition = [
+const threatMapPosition1 = [
   { x: 7, y: 5 },
   { x: 3, y: 7 },
   { x: 8, y: 0 },
   { x: 7, y: 9 },
 ];
 
-const treasureMapPosition = [
+const treasureMapPosition1 = [
   { x: 7, y: 0 },
   { x: 9, y: 0 },
   { x: 7, y: 2 },
   { x: 3, y: 5 },
   { x: 6, y: 9 },
 ];
-const stairsDownPosition = [{ x: 9, y: 9 }];
+const stairsDownPosition1 = [{ x: 9, y: 9 }];
 
-export default wallMapPosition;
-export { threatMapPosition };
-export { treasureMapPosition };
-export { stairsDownPosition };
-export const mapHeight = 10;
-export const mapWidth = 10; //should remain 10
-export const cellSize = 50;
+export default wallMapPosition1;
+export { threatMapPosition1 };
+export { treasureMapPosition1 };
+export { stairsDownPosition1 };
+export const mapHeight1 = 10;
+export const mapWidth1 = 10; //should remain 10
+export const cellSize1 = 50;

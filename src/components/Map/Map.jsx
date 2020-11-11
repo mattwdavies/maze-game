@@ -9,12 +9,26 @@ import threat from '../../images/threat.png';
 import treasure from '../../images/treasure.png';
 import wall from '../../images/wall.png';
 import stairs from '../../images/stairs-down.png';
-import wallMapPosition, {
-  threatMapPosition,
-  treasureMapPosition,
-  cellSize,
-  stairsDownPosition,
+import wallMapPosition1, {
+  threatMapPosition1,
+  treasureMapPosition1,
+  cellSize1,
+  stairsDownPosition1,
 } from '../../config/level1';
+import wallMapPosition2, {
+  threatMapPosition2,
+  treasureMapPosition2,
+  cellSize2,
+  stairsDownPosition2,
+} from '../../config/level2';
+import decide from '../../config/levelDecide';
+let wallMapPosition = decide == 1 ? wallMapPosition1 : wallMapPosition2;
+let threatMapPosition = decide == 1 ? threatMapPosition1 : threatMapPosition2;
+let treasureMapPosition =
+  decide == 1 ? treasureMapPosition1 : treasureMapPosition2;
+let cellSize = decide == 1 ? cellSize1 : cellSize2;
+let stairsDownPosition =
+  decide == 1 ? stairsDownPosition1 : stairsDownPosition2;
 
 class GameLogic extends React.Component {
   constructor(props) {
@@ -118,6 +132,15 @@ class GameLogic extends React.Component {
       playerPosition['x'] = prevPlayerPos['x'];
       playerPosition['y'] = prevPlayerPos['y'];
 
+      this.setState({});
+    }
+    if (
+      board[newPlayerPos.x][newPlayerPos.y]['state'] ===
+      this.state.entityStates.stairs
+    ) {
+      playerPosition['x'] = prevPlayerPos['x'];
+      playerPosition['y'] = prevPlayerPos['y'];
+      alert('Complete!');
       this.setState({});
     }
     if (

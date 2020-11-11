@@ -1,14 +1,32 @@
 import React from 'react';
 import GameLogic from '../Map/Map';
 import KeyHandler from 'react-key-handler';
-import wallMapPosition, {
-  threatMapPosition,
-  treasureMapPosition,
-  mapHeight,
-  mapWidth,
-  stairsDownPosition,
+import wallMapPosition1, {
+  threatMapPosition1,
+  treasureMapPosition1,
+  mapHeight1,
+  mapWidth1,
+  stairsDownPosition1,
 } from '../../config/level1';
+import wallMapPosition2, {
+  threatMapPosition2,
+  treasureMapPosition2,
+  mapHeight2,
+  mapWidth2,
+  stairsDownPosition2,
+} from '../../config/level2';
+import decide from '../../config/levelDecide';
 //always update config in MapLogic, Map, WallIcon and GameIcon
+
+//extract this into a separate page, import all the stuff above ^ into a new page and then export either map1 or map2 etc
+let wallMapPosition = decide == 1 ? wallMapPosition1 : wallMapPosition2;
+let threatMapPosition = decide == 1 ? threatMapPosition1 : threatMapPosition2;
+let treasureMapPosition =
+  decide == 1 ? treasureMapPosition1 : treasureMapPosition2;
+let mapHeight = decide == 1 ? mapHeight1 : mapHeight2;
+let mapWidth = decide == 1 ? mapWidth1 : mapWidth2;
+let stairsDownPosition =
+  decide == 1 ? stairsDownPosition1 : stairsDownPosition2;
 class MapLogic extends React.Component {
   constructor(props) {
     super(props);
