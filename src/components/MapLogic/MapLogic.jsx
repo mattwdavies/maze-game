@@ -8,6 +8,7 @@ import wallMapPosition1, {
   mapWidth1,
   stairsDownPosition1,
 } from '../../config/level1';
+
 import wallMapPosition2, {
   threatMapPosition2,
   treasureMapPosition2,
@@ -15,8 +16,8 @@ import wallMapPosition2, {
   mapWidth2,
   stairsDownPosition2,
 } from '../../config/level2';
+
 import decide from '../../config/levelDecide';
-//always update config in MapLogic, Map, WallIcon and GameIcon
 
 //extract this into a separate page, import all the stuff above ^ into a new page and then export either map1 or map2 etc
 let wallMapPosition = decide == 1 ? wallMapPosition1 : wallMapPosition2;

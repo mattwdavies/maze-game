@@ -1,6 +1,7 @@
 import React from 'react';
 import HealthBar from '../HealthBar/HealthBar';
 import WealthBar from '../WealthBar/WealthBar';
+import LevelDisplay from '../LevelDisplay/LevelDisplay';
 import GameIcon from '../Icons/GameIcon/GameIcon';
 import WallIcon from '../Icons/GameIcon/WallIcon';
 import './Map.css';
@@ -15,13 +16,16 @@ import wallMapPosition1, {
   cellSize1,
   stairsDownPosition1,
 } from '../../config/level1';
+
 import wallMapPosition2, {
   threatMapPosition2,
   treasureMapPosition2,
   cellSize2,
   stairsDownPosition2,
 } from '../../config/level2';
+
 import decide from '../../config/levelDecide';
+
 let wallMapPosition = decide == 1 ? wallMapPosition1 : wallMapPosition2;
 let threatMapPosition = decide == 1 ? threatMapPosition1 : threatMapPosition2;
 let treasureMapPosition =
@@ -222,6 +226,7 @@ class GameLogic extends React.Component {
       <>
         <HealthBar health={this.state.health} />
         <WealthBar wealth={this.state.wealth} />
+        <LevelDisplay level={decide} />
         <table cellSpacing="0" border="3px solid black">
           <tbody>
             {board.map((item, index) => (

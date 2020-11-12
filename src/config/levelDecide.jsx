@@ -1,3 +1,3 @@
-const decide = 1;
+const decide = 2;
 
 export default decide;

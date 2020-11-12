@@ -64,11 +64,18 @@ const wallMapPosition2 = [
 
 const threatMapPosition2 = [
   { x: 7, y: 0 },
+  { x: 7, y: 4 },
   { x: 4, y: 5 },
   { x: 11, y: 1 },
 ];
 
-const treasureMapPosition2 = [{ x: 4, y: 9 }];
+const treasureMapPosition2 = [
+  { x: 4, y: 9 },
+  { x: 2, y: 2 },
+  { x: 12, y: 2 },
+  { x: 12, y: 7 },
+  { x: 4, y: 2 },
+];
 const stairsDownPosition2 = [{ x: 8, y: 2 }];
 
 export default wallMapPosition2;
