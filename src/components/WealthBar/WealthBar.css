@@ -1,0 +1,10 @@
+@font-face {
+    font-family: 'font1';
+    src: url('../../fonts/Underdog/Underdog-Regular.ttf');
+  }
+
+  .styled {
+      color: white;
+      font-family: 'font1';
+      text-align: center;
+  }

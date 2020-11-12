@@ -29,7 +29,6 @@ let treasureMapPosition =
 let cellSize = decide == 1 ? cellSize1 : cellSize2;
 let stairsDownPosition =
   decide == 1 ? stairsDownPosition1 : stairsDownPosition2;
-
 class GameLogic extends React.Component {
   constructor(props) {
     super(props);
@@ -116,7 +115,6 @@ class GameLogic extends React.Component {
       this.state.entityStates.threat
     ) {
       let newHealth = this.state.health;
-      console.log('Threat hit!');
       --newHealth;
       playerPosition['x'] = 0;
       playerPosition['y'] = 0;
@@ -128,7 +126,6 @@ class GameLogic extends React.Component {
       board[newPlayerPos.x][newPlayerPos.y]['state'] ===
       this.state.entityStates.wall
     ) {
-      console.log('Wall');
       playerPosition['x'] = prevPlayerPos['x'];
       playerPosition['y'] = prevPlayerPos['y'];
 
@@ -140,7 +137,7 @@ class GameLogic extends React.Component {
     ) {
       playerPosition['x'] = prevPlayerPos['x'];
       playerPosition['y'] = prevPlayerPos['y'];
-      alert('Complete!');
+      alert('Level COMPLETE! Please change the level in src/levelDecide/');
       this.setState({});
     }
     if (

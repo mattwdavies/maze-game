@@ -31,7 +31,7 @@ class MapLogic extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showGameBoard: false,
+      showGameBoard: true,
       mapHeight: mapHeight,
       mapWidth: mapWidth,
       wallPosition: [],
